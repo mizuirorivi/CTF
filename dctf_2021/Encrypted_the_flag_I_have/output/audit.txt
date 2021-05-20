@@ -1,0 +1,23 @@
+Foremost version 1.5.7 by Jesse Kornblum, Kris Kendall, and Nick Mikus
+Audit File
+
+Foremost started at Mon May 17 03:54:29 2021
+Invocation: foremost EncryptedTheFlagIHave.png 
+Output directory: /home/mizuiro/PROJECTS/ctf/dctf_2021/Encrypted_the_flag_I_have/output
+Configuration file: /etc/foremost.conf
+------------------------------------------------------------------
+File: EncryptedTheFlagIHave.png
+Start: Mon May 17 03:54:29 2021
+Length: 15 KB (15865 bytes)
+ 
+Num	 Name (bs=512)	       Size	 File Offset	 Comment 
+
+0:	00000000.png 	      15 KB 	          0 	  (1383 x 148)
+Finish: Mon May 17 03:54:29 2021
+
+1 FILES EXTRACTED
+	
+png:= 1
+------------------------------------------------------------------
+
+Foremost finished at Mon May 17 03:54:29 2021
