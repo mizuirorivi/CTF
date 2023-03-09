@@ -1,21 +1,7 @@
 # Ez
+###### tags: `KalmarCTF` `2023` `web`
 
-## What we noticed
-
-* this service use caddy
-* caddy is web server
-* may use FastCGI protocol because the caddy execute php
-* caddy 2.4.5
-
-## suspicious git issue
-
-* https://github.com/caddyserver/caddy/issues/5278
-* https://github.com/caddyserver/caddy/issues/4466
-* https://github.com/caddyserver/caddy/issues/3410
-* https://github.com/caddyserver/caddy/issues/3100
-
-## result that seeing writeups
-
+>I couldn't solve it during the game, so I looked at the writeup. I'm sorry you couldn't solve this one.
 
 this is Caddy File.
 
@@ -80,7 +66,8 @@ vuln can exist by [CVE-2022-29718](https://github.com/advisories/GHSA-2927-hv3p-
 
 there were [good forum](https://caddy.community/t/php-fastcgi-phishing-redirection/14542/15)
 
-![](/home/r3v321se/Projects/ctf/2023/KalmarCTF/web/Ez/forum.png)
+![](https://i.imgur.com/7U80KuH.png)
+
 
 so i tried
 
