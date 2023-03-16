@@ -1,0 +1,10 @@
+from pwn import *
+
+d_nAcdbf1a = "\x9dn\x93\xc8\xb2\xb9A\x8b\x90\xc2\xddc\x93\x93\x92\x8fd\x92\x9f\x94\xd5b\x91\xc5\xc0\x8ef\xc4\x97\xc0\x8f1\xc1\x90\xc4\x8ba\xc2\x94\xc9\x90\x00\x00";
+d_b = "\xf1\xa7\xf0\x07\xed";
+output = ""
+for i in range(len(d_nAcdbf1a)):
+    o = ord(d_nAcdbf1a[i]) ^ ((ord(d_b[4 - (i % 5)]) << 24) >> 24)
+    output_chr = chr(o)
+    output += output_chr
+print(output)
