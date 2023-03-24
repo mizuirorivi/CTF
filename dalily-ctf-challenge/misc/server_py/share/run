@@ -1,0 +1,6 @@
+#!/bin/bash
+
+#Use this to put a time limit on the execution
+#timeout 30 ./chall.py
+
+./chall.py

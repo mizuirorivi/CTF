@@ -1,0 +1,15 @@
+service pwn
+{
+    disable         = no
+    id              = netunique-server
+    type            = unlisted
+    wait            = no
+    socket_type     = stream
+    protocol        = tcp
+    user            = root
+    server          = /usr/bin/python
+    server_args     = -c cd${IFS}/home/pwn;exec${IFS}./chal.py
+    port            = 8888
+    flags           = IPv4 REUSE
+    # bind            = 192.168.240.37
+}
