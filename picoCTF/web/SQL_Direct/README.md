@@ -1,4 +1,5 @@
 # SQL_Direct
+###### tags: `picoctf` `web` 
 ```
 pico=# select * from flags;
  id | firstname | lastname  |                address                 
